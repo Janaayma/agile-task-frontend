@@ -1,13 +1,32 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Sun, Moon, Palette } from 'lucide-react';
+import { useTheme } from '@/context/ThemeProvider';
+import { toast } from 'sonner';
 
 const AppearanceSettings = () => {
+  const { theme, setTheme } = useTheme();
+  
+  useEffect(() => {
+    // Apply theme on component mount
+    const root = window.document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [theme]);
+
+  const handleThemeChange = (value: string) => {
+    setTheme(value as 'light' | 'dark' | 'system');
+    toast.success(`Theme changed to ${value} mode`);
+  };
+
   return (
     <div className="space-y-6">
       <Card>
@@ -18,8 +37,12 @@ const AppearanceSettings = () => {
         <CardContent className="space-y-6">
           <div className="space-y-4">
             <Label>Color Mode</Label>
-            <RadioGroup defaultValue="light" className="flex gap-4">
-              <div className="flex items-center space-x-2 border rounded-md p-4 hover:bg-gray-50 cursor-pointer">
+            <RadioGroup 
+              value={theme} 
+              onValueChange={handleThemeChange}
+              className="flex gap-4"
+            >
+              <div className="flex items-center space-x-2 border rounded-md p-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
                 <RadioGroupItem value="light" id="light" />
                 <Label htmlFor="light" className="flex items-center cursor-pointer">
                   <Sun className="mr-2 h-5 w-5" />
@@ -27,7 +50,7 @@ const AppearanceSettings = () => {
                 </Label>
               </div>
               
-              <div className="flex items-center space-x-2 border rounded-md p-4 hover:bg-gray-50 cursor-pointer">
+              <div className="flex items-center space-x-2 border rounded-md p-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
                 <RadioGroupItem value="dark" id="dark" />
                 <Label htmlFor="dark" className="flex items-center cursor-pointer">
                   <Moon className="mr-2 h-5 w-5" />
@@ -35,7 +58,7 @@ const AppearanceSettings = () => {
                 </Label>
               </div>
               
-              <div className="flex items-center space-x-2 border rounded-md p-4 hover:bg-gray-50 cursor-pointer">
+              <div className="flex items-center space-x-2 border rounded-md p-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
                 <RadioGroupItem value="system" id="system" />
                 <Label htmlFor="system" className="cursor-pointer">System</Label>
               </div>
@@ -47,7 +70,7 @@ const AppearanceSettings = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {['Purple', 'Blue', 'Green', 'Red'].map((color, index) => (
                 <div key={color} className="flex flex-col items-center gap-2">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center cursor-pointer border-2 ${index === 0 ? 'border-primary bg-primary text-white' : 'border-gray-200'}`}>
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center cursor-pointer border-2 ${index === 0 ? 'border-primary bg-primary text-white' : 'border-gray-200 dark:border-gray-700'}`}>
                     {index === 0 && <Palette className="h-5 w-5" />}
                   </div>
                   <span className="text-sm">{color}</span>
@@ -67,7 +90,7 @@ const AppearanceSettings = () => {
           <div className="flex items-center justify-between">
             <div>
               <Label htmlFor="compact-mode" className="font-medium">Compact Mode</Label>
-              <p className="text-sm text-gray-500">Reduce spacing for a more compact view</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Reduce spacing for a more compact view</p>
             </div>
             <Switch id="compact-mode" />
           </div>
@@ -75,7 +98,7 @@ const AppearanceSettings = () => {
           <div className="flex items-center justify-between">
             <div>
               <Label htmlFor="animations" className="font-medium">Animations</Label>
-              <p className="text-sm text-gray-500">Enable UI animations and transitions</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Enable UI animations and transitions</p>
             </div>
             <Switch id="animations" defaultChecked />
           </div>
