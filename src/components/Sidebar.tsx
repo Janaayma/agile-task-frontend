@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Home, LayoutDashboard, CheckSquare, Calendar, Settings, LogOut, Menu, List, Tag } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Link, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
   className?: string;
@@ -14,6 +15,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   const { categories } = useTaskContext();
   const isMobile = useIsMobile();
+  const location = useLocation();
   
   const sidebarContent = (
     <div className={cn("flex flex-col h-full bg-white border-r", className)}>
@@ -26,25 +28,37 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       
       <div className="flex-1 overflow-auto py-2">
         <nav className="space-y-1 px-2">
-          <Button variant="ghost" className="w-full justify-start" asChild>
-            <a href="/">
+          <Button 
+            variant="ghost" 
+            className={cn("w-full justify-start", location.pathname === "/" && "bg-primary/10 text-primary")} 
+            asChild
+          >
+            <Link to="/">
               <LayoutDashboard className="mr-2 h-4 w-4" />
               Dashboard
-            </a>
+            </Link>
           </Button>
           
-          <Button variant="ghost" className="w-full justify-start" asChild>
-            <a href="/">
+          <Button 
+            variant="ghost" 
+            className="w-full justify-start" 
+            asChild
+          >
+            <Link to="/">
               <List className="mr-2 h-4 w-4" />
               All Tasks
-            </a>
+            </Link>
           </Button>
           
-          <Button variant="ghost" className="w-full justify-start" asChild>
-            <a href="/">
+          <Button 
+            variant="ghost" 
+            className="w-full justify-start" 
+            asChild
+          >
+            <Link to="/">
               <Calendar className="mr-2 h-4 w-4" />
               Calendar
-            </a>
+            </Link>
           </Button>
           
           <div className="pt-4 pb-2">
@@ -65,12 +79,16 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
         </nav>
       </div>
       
-      <div className="p-4 border-t">
-        <Button variant="ghost" className="w-full justify-start" asChild>
-          <a href="/">
+      <div className="p-4 border-t space-y-1">
+        <Button 
+          variant="ghost" 
+          className={cn("w-full justify-start", location.pathname === "/settings" && "bg-primary/10 text-primary")} 
+          asChild
+        >
+          <Link to="/settings">
             <Settings className="mr-2 h-4 w-4" />
             Settings
-          </a>
+          </Link>
         </Button>
       </div>
     </div>
