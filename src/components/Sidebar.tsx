@@ -18,8 +18,8 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   const location = useLocation();
   
   const sidebarContent = (
-    <div className={cn("flex flex-col h-full bg-white border-r", className)}>
-      <div className="p-4 border-b">
+    <div className={cn("flex flex-col h-full bg-sidebar border-r border-sidebar-border", className)}>
+      <div className="p-4 border-b border-sidebar-border">
         <h1 className="text-xl font-bold text-primary flex items-center">
           <CheckSquare className="mr-2 h-6 w-6" />
           TaskMaster
@@ -63,8 +63,8 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           
           <div className="pt-4 pb-2">
             <div className="px-2 flex items-center">
-              <Tag className="h-4 w-4 text-gray-400" />
-              <span className="ml-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <Tag className="h-4 w-4 text-sidebar-foreground/70" />
+              <span className="ml-2 text-xs font-semibold text-sidebar-foreground/70 uppercase tracking-wider">
                 Categories
               </span>
             </div>
@@ -79,7 +79,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
         </nav>
       </div>
       
-      <div className="p-4 border-t space-y-1">
+      <div className="p-4 border-t border-sidebar-border space-y-1">
         <Button 
           variant="ghost" 
           className={cn("w-full justify-start", location.pathname === "/settings" && "bg-primary/10 text-primary")} 
@@ -102,7 +102,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="p-0 w-[250px]">
+        <SheetContent side="left" className="p-0 w-[250px] bg-sidebar text-sidebar-foreground border-r border-sidebar-border">
           {sidebarContent}
         </SheetContent>
       </Sheet>

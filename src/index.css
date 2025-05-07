@@ -86,7 +86,7 @@
     --input: 217.2 32.6% 17.5%;
     --ring: var(--primary);
     
-    --sidebar-background: 240 10% 5%; /* Darker sidebar background that matches main background */
+    --sidebar-background: 240 10% 3%; /* Dark grey sidebar that's darker than the main background */
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: 0 0% 100%;
