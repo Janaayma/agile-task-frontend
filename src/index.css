@@ -57,7 +57,7 @@
 
   .dark {
     /* Dark theme - base colors */
-    --background: 240 5.9% 10%; /* Dark charcoal/black background */
+    --background: 240 10% 3.9%; /* Changed to a darker charcoal background */
     --foreground: 0 0% 98%; /* Light text for readability */
 
     --card: 240 6% 13%; /* Slightly lighter than background for cards */
@@ -86,7 +86,7 @@
     --input: 217.2 32.6% 17.5%;
     --ring: var(--primary);
     
-    --sidebar-background: 240 6% 15%; /* Slightly lighter than main background */
+    --sidebar-background: 240 10% 5%; /* Darker sidebar background that matches main background */
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: 0 0% 100%;
