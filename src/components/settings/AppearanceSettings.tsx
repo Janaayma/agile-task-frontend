@@ -5,12 +5,12 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Sun, Moon, Palette } from 'lucide-react';
+import { Sun, Moon, Palette, CheckCircle2 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeProvider';
 import { toast } from 'sonner';
 
 const AppearanceSettings = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme, colorTheme, setTheme, setColorTheme } = useTheme();
   
   useEffect(() => {
     // Apply theme on component mount
@@ -26,6 +26,11 @@ const AppearanceSettings = () => {
     setTheme(value as 'light' | 'dark' | 'system');
     toast.success(`Theme changed to ${value} mode`);
   };
+  
+  const handleColorChange = (color: string) => {
+    setColorTheme(color as 'purple' | 'blue' | 'green' | 'red');
+    toast.success(`Theme color changed to ${color}`);
+  };
 
   return (
     <div className="space-y-6">
@@ -40,7 +45,7 @@ const AppearanceSettings = () => {
             <RadioGroup 
               value={theme} 
               onValueChange={handleThemeChange}
-              className="flex gap-4"
+              className="flex flex-wrap gap-4"
             >
               <div className="flex items-center space-x-2 border rounded-md p-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
                 <RadioGroupItem value="light" id="light" />
@@ -68,12 +73,27 @@ const AppearanceSettings = () => {
           <div className="space-y-4">
             <Label>Accent Color</Label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {['Purple', 'Blue', 'Green', 'Red'].map((color, index) => (
-                <div key={color} className="flex flex-col items-center gap-2">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center cursor-pointer border-2 ${index === 0 ? 'border-primary bg-primary text-white' : 'border-gray-200 dark:border-gray-700'}`}>
-                    {index === 0 && <Palette className="h-5 w-5" />}
+              {[
+                { name: 'Purple', value: 'purple', color: 'bg-[hsl(258,68%,74%)]' },
+                { name: 'Blue', value: 'blue', color: 'bg-[hsl(210,100%,66%)]' },
+                { name: 'Green', value: 'green', color: 'bg-[hsl(142,71%,45%)]' },
+                { name: 'Red', value: 'red', color: 'bg-[hsl(0,84%,60%)]' }
+              ].map((color) => (
+                <div 
+                  key={color.value} 
+                  className="flex flex-col items-center gap-2"
+                  onClick={() => handleColorChange(color.value)}
+                >
+                  <div 
+                    className={`w-12 h-12 rounded-full flex items-center justify-center cursor-pointer border-2 ${
+                      colorTheme === color.value 
+                        ? 'border-primary ring-2 ring-primary ring-opacity-50' 
+                        : 'border-gray-200 dark:border-gray-700'
+                    } ${color.color}`}
+                  >
+                    {colorTheme === color.value && <CheckCircle2 className="h-5 w-5 text-white" />}
                   </div>
-                  <span className="text-sm">{color}</span>
+                  <span className="text-sm">{color.name}</span>
                 </div>
               ))}
             </div>

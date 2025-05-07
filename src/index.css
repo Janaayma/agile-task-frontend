@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
@@ -6,6 +7,7 @@
 
 @layer base {
   :root {
+    /* Light theme - base colors */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -15,7 +17,14 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 258 68% 74%;
+    /* Theme colors with their variants */
+    --purple-primary: 258 68% 74%;
+    --blue-primary: 210 100% 66%;
+    --green-primary: 142 71% 45%;
+    --red-primary: 0 84% 60%;
+
+    /* Active theme color - default to purple */
+    --primary: var(--purple-primary);
     --primary-foreground: 210 40% 98%;
 
     --secondary: 260 31% 50%;
@@ -32,13 +41,13 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 258 68% 74%;
+    --ring: var(--primary);
 
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 258 68% 74%;
+    --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
@@ -47,18 +56,21 @@
   }
 
   .dark {
+    /* Dark theme - base colors */
     --background: 240 5.9% 10%; /* Dark charcoal/black background */
-    --foreground: 0 0% 98%; /* Keep text color light for readability */
+    --foreground: 0 0% 98%; /* Light text for readability */
 
-    --card: 240 5.9% 10%;
+    --card: 240 6% 13%; /* Slightly lighter than background for cards */
     --card-foreground: 0 0% 98%;
-    --popover: 240 5.9% 10%;
+    
+    --popover: 240 6% 13%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 258 68% 74%;
+    /* Theme colors stay the same, just using them differently */
+    --primary: var(--purple-primary); /* Uses the active theme color */
     --primary-foreground: 222.2 47.4% 11.2%;
 
-    --secondary: 260 31% 50%;
+    --secondary: 260 31% 35%; /* Darker in dark mode */
     --secondary-foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
@@ -72,10 +84,11 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
+    --ring: var(--primary);
+    
+    --sidebar-background: 240 6% 15%; /* Slightly lighter than main background */
     --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 258 68% 74%;
+    --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
@@ -95,9 +108,36 @@
   }
 }
 
+/* Add color theme utility classes */
+@layer utilities {
+  .theme-purple {
+    --primary: var(--purple-primary);
+    --ring: var(--purple-primary);
+    --sidebar-primary: var(--purple-primary);
+  }
+
+  .theme-blue {
+    --primary: var(--blue-primary);
+    --ring: var(--blue-primary);
+    --sidebar-primary: var(--blue-primary);
+  }
+
+  .theme-green {
+    --primary: var(--green-primary);
+    --ring: var(--green-primary);
+    --sidebar-primary: var(--green-primary);
+  }
+
+  .theme-red {
+    --primary: var(--red-primary);
+    --ring: var(--red-primary);
+    --sidebar-primary: var(--red-primary);
+  }
+}
+
 @layer components {
   .task-card {
-    @apply bg-white rounded-lg shadow-sm p-4 mb-3 border border-gray-100 hover:shadow-md transition-shadow duration-200;
+    @apply bg-card rounded-lg shadow-sm p-4 mb-3 border border-border hover:shadow-md transition-shadow duration-200;
   }
   
   .task-form-field {
@@ -105,30 +145,67 @@
   }
   
   .stat-card {
-    @apply bg-white rounded-lg shadow-sm p-4 border border-gray-100;
+    @apply bg-card rounded-lg shadow-sm p-4 border border-border;
   }
   
   .priority-high {
-    @apply bg-red-100 text-red-800;
+    @apply bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-200;
   }
   
   .priority-medium {
-    @apply bg-yellow-100 text-yellow-800;
+    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-200;
   }
   
   .priority-low {
-    @apply bg-green-100 text-green-800;
+    @apply bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-200;
   }
   
   .status-completed {
-    @apply bg-green-100 text-green-800;
+    @apply bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-200;
   }
   
   .status-in-progress {
-    @apply bg-blue-100 text-blue-800;
+    @apply bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200;
   }
   
   .status-pending {
-    @apply bg-yellow-100 text-yellow-800;
+    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-200;
+  }
+
+  /* Card hover effects */
+  .hover-card {
+    @apply transition-all duration-300 hover:shadow-md hover:translate-y-[-2px];
+  }
+
+  /* Animation classes */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.2s ease-out forwards;
+  }
+}
+
+/* Define some keyframes for animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
   }
 }
