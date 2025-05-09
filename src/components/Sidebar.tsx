@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useTaskContext } from '../context/TaskContext';
 import { cn } from '@/lib/utils';
@@ -86,8 +85,8 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           asChild
         >
           <Link to="/login">
-            <LogIn className="mr-2 h-4 w-4" />
-            Login
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
           </Link>
         </Button>
         
