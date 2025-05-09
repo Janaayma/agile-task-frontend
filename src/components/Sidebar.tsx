@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useTaskContext } from '../context/TaskContext';
 import { cn } from '@/lib/utils';
@@ -29,10 +30,10 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
         <nav className="space-y-1 px-2">
           <Button 
             variant="ghost" 
-            className={cn("w-full justify-start", location.pathname === "/" && "bg-primary/10 text-primary")} 
+            className={cn("w-full justify-start", location.pathname === "/dashboard" && "bg-primary/10 text-primary")} 
             asChild
           >
-            <Link to="/">
+            <Link to="/dashboard">
               <LayoutDashboard className="mr-2 h-4 w-4" />
               Dashboard
             </Link>
@@ -43,7 +44,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             className="w-full justify-start" 
             asChild
           >
-            <Link to="/">
+            <Link to="/dashboard">
               <List className="mr-2 h-4 w-4" />
               All Tasks
             </Link>
@@ -54,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             className="w-full justify-start" 
             asChild
           >
-            <Link to="/">
+            <Link to="/dashboard">
               <Calendar className="mr-2 h-4 w-4" />
               Calendar
             </Link>
