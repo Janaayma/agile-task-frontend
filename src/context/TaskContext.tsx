@@ -3,9 +3,13 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { mockTasks, Task, categories } from '../data/mockData';
 import { toast } from 'sonner';
 
+type TaskView = 'list' | 'kanban' | 'calendar';
+
 interface TaskContextProps {
   tasks: Task[];
   categories: string[];
+  viewMode: TaskView;
+  setViewMode: (view: TaskView) => void;
   addTask: (task: Omit<Task, 'id' | 'createdAt'>) => void;
   updateTask: (task: Task) => void;
   deleteTask: (id: string) => void;
@@ -24,6 +28,7 @@ export const useTaskContext = () => {
 
 export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [tasks, setTasks] = useState<Task[]>(mockTasks);
+  const [viewMode, setViewMode] = useState<TaskView>('list');
 
   const addTask = (taskData: Omit<Task, 'id' | 'createdAt'>) => {
     const newTask: Task = {
@@ -57,6 +62,8 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       value={{
         tasks,
         categories,
+        viewMode,
+        setViewMode,
         addTask,
         updateTask,
         deleteTask,

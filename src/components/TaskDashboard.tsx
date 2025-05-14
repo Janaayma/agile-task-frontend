@@ -2,11 +2,16 @@
 import React from 'react';
 import Sidebar from './Sidebar';
 import TaskList from './TaskList';
+import KanbanView from './KanbanView';
+import CalendarView from './CalendarView';
 import TaskStats from './TaskStats';
+import ViewSelector from './ViewSelector';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useTaskContext } from '@/context/TaskContext';
 
 const TaskDashboard: React.FC = () => {
   const isMobile = useIsMobile();
+  const { viewMode } = useTaskContext();
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -22,7 +27,11 @@ const TaskDashboard: React.FC = () => {
           </div>
           
           <TaskStats />
-          <TaskList />
+          <ViewSelector />
+          
+          {viewMode === 'list' && <TaskList />}
+          {viewMode === 'kanban' && <KanbanView />}
+          {viewMode === 'calendar' && <CalendarView />}
         </main>
       </div>
     </div>

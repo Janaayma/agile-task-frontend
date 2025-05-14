@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { useTaskContext } from '../context/TaskContext';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Home, LayoutDashboard, CheckSquare, Calendar, Settings, LogOut, Menu, List, Tag, LogIn } from 'lucide-react';
+import { Calendar, CheckSquare, List, Menu, Settings, LogOut, Tag } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Link, useLocation } from 'react-router-dom';
@@ -12,7 +13,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ className }) => {
-  const { categories } = useTaskContext();
+  const { categories, viewMode, setViewMode } = useTaskContext();
   const isMobile = useIsMobile();
   const location = useLocation();
   
@@ -33,17 +34,6 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             asChild
           >
             <Link to="/dashboard">
-              <LayoutDashboard className="mr-2 h-4 w-4" />
-              Dashboard
-            </Link>
-          </Button>
-          
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start" 
-            asChild
-          >
-            <Link to="/dashboard">
               <List className="mr-2 h-4 w-4" />
               All Tasks
             </Link>
@@ -51,12 +41,29 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           
           <Button 
             variant="ghost" 
-            className="w-full justify-start" 
+            className={cn("w-full justify-start", viewMode === "kanban" && "bg-primary/10 text-primary")} 
+            onClick={() => {
+              setViewMode('kanban');
+            }}
+            asChild
+          >
+            <Link to="/dashboard">
+              <CheckSquare className="mr-2 h-4 w-4" />
+              Kanban View
+            </Link>
+          </Button>
+          
+          <Button 
+            variant="ghost" 
+            className={cn("w-full justify-start", viewMode === "calendar" && "bg-primary/10 text-primary")} 
+            onClick={() => {
+              setViewMode('calendar');
+            }}
             asChild
           >
             <Link to="/dashboard">
               <Calendar className="mr-2 h-4 w-4" />
-              Calendar
+              Calendar View
             </Link>
           </Button>
           
@@ -81,23 +88,23 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       <div className="p-4 border-t border-sidebar-border space-y-1">
         <Button 
           variant="ghost" 
-          className={cn("w-full justify-start", location.pathname === "/login" && "bg-primary/10 text-primary")} 
-          asChild
-        >
-          <Link to="/login">
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
-          </Link>
-        </Button>
-        
-        <Button 
-          variant="ghost" 
           className={cn("w-full justify-start", location.pathname === "/settings" && "bg-primary/10 text-primary")} 
           asChild
         >
           <Link to="/settings">
             <Settings className="mr-2 h-4 w-4" />
             Settings
+          </Link>
+        </Button>
+        
+        <Button 
+          variant="ghost" 
+          className={cn("w-full justify-start", location.pathname === "/login" && "bg-primary/10 text-primary")} 
+          asChild
+        >
+          <Link to="/login">
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
           </Link>
         </Button>
       </div>
