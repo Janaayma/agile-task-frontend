@@ -9,7 +9,7 @@ const KanbanView: React.FC = () => {
 
   // Group tasks by status
   const tasksByStatus = {
-    'To Do': tasks.filter(task => task.status === 'todo'),
+    'To Do': tasks.filter(task => task.status === 'pending'),
     'In Progress': tasks.filter(task => task.status === 'in-progress'),
     'Completed': tasks.filter(task => task.status === 'completed')
   };

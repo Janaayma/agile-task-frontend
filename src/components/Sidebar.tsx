@@ -30,7 +30,8 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
         <nav className="space-y-1 px-2">
           <Button 
             variant="ghost" 
-            className={cn("w-full justify-start", location.pathname === "/dashboard" && "bg-primary/10 text-primary")} 
+            className={cn("w-full justify-start", location.pathname === "/dashboard" && viewMode === "list" && "bg-primary/10 text-primary")} 
+            onClick={() => setViewMode('list')}
             asChild
           >
             <Link to="/dashboard">
@@ -42,9 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           <Button 
             variant="ghost" 
             className={cn("w-full justify-start", viewMode === "kanban" && "bg-primary/10 text-primary")} 
-            onClick={() => {
-              setViewMode('kanban');
-            }}
+            onClick={() => setViewMode('kanban')}
             asChild
           >
             <Link to="/dashboard">
@@ -56,9 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           <Button 
             variant="ghost" 
             className={cn("w-full justify-start", viewMode === "calendar" && "bg-primary/10 text-primary")} 
-            onClick={() => {
-              setViewMode('calendar');
-            }}
+            onClick={() => setViewMode('calendar')}
             asChild
           >
             <Link to="/dashboard">
@@ -76,9 +73,9 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             </div>
             <div className="mt-2 space-y-1">
               {categories.map((category) => (
-                <Button key={category} variant="ghost" size="sm" className="w-full justify-start text-sm">
+                <div key={category} className="px-2 py-1 text-sm text-sidebar-foreground">
                   {category}
-                </Button>
+                </div>
               ))}
             </div>
           </div>
