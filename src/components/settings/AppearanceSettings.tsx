@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -23,7 +22,7 @@ const AppearanceSettings = () => {
   }, [theme]);
 
   const handleThemeChange = (value: string) => {
-    setTheme(value as 'light' | 'dark' | 'system');
+    setTheme(value as 'light' | 'dark');
     toast.success(`Theme changed to ${value} mode`);
   };
   
@@ -61,11 +60,6 @@ const AppearanceSettings = () => {
                   <Moon className="mr-2 h-5 w-5" />
                   Dark
                 </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2 border rounded-md p-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
-                <RadioGroupItem value="system" id="system" />
-                <Label htmlFor="system" className="cursor-pointer">System</Label>
               </div>
             </RadioGroup>
           </div>

@@ -1,7 +1,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
-type Theme = 'light' | 'dark' | 'system';
+type Theme = 'light' | 'dark';
 type ColorTheme = 'purple' | 'blue' | 'green' | 'red';
 
 type ThemeProviderProps = {
@@ -18,24 +18,19 @@ type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>('system');
+  const [theme, setTheme] = useState<Theme>('light');
   const [colorTheme, setColorTheme] = useState<ColorTheme>('purple');
 
   useEffect(() => {
-    // Get stored theme preference or default to system
+    // Get stored theme preference or default to light
     const storedTheme = localStorage.getItem('theme') as Theme;
-    if (storedTheme) {
+    if (storedTheme && (storedTheme === 'light' || storedTheme === 'dark')) {
       setTheme(storedTheme);
       applyTheme(storedTheme);
     } else {
-      // Check system preference
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setTheme('dark');
-        applyTheme('dark');
-      } else {
-        setTheme('light');
-        applyTheme('light');
-      }
+      // Default to light theme
+      setTheme('light');
+      applyTheme('light');
     }
     
     // Get stored color theme preference or default to purple
@@ -53,15 +48,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     root.classList.remove('light', 'dark');
     
     // Add the new theme class
-    if (newTheme === 'system') {
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        root.classList.add('dark');
-      } else {
-        root.classList.add('light');
-      }
-    } else {
-      root.classList.add(newTheme);
-    }
+    root.classList.add(newTheme);
     
     // Store the preference
     localStorage.setItem('theme', newTheme);
