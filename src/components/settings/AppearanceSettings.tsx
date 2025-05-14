@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -10,6 +11,8 @@ import { toast } from 'sonner';
 
 const AppearanceSettings = () => {
   const { theme, colorTheme, setTheme, setColorTheme } = useTheme();
+  const [fontSize, setFontSize] = useState('medium');
+  const [animations, setAnimations] = useState(true);
   
   useEffect(() => {
     // Apply theme on component mount
@@ -19,6 +22,15 @@ const AppearanceSettings = () => {
     } else {
       root.classList.remove('dark');
     }
+    
+    // Load saved font size preference
+    const savedFontSize = localStorage.getItem('fontSize') || 'medium';
+    setFontSize(savedFontSize);
+    applyFontSize(savedFontSize);
+    
+    // Load saved animations preference
+    const savedAnimations = localStorage.getItem('animations') !== 'false';
+    setAnimations(savedAnimations);
   }, [theme]);
 
   const handleThemeChange = (value: string) => {
@@ -29,6 +41,45 @@ const AppearanceSettings = () => {
   const handleColorChange = (color: string) => {
     setColorTheme(color as 'purple' | 'blue' | 'green' | 'red');
     toast.success(`Theme color changed to ${color}`);
+  };
+  
+  const handleFontSizeChange = (value: string) => {
+    setFontSize(value);
+    applyFontSize(value);
+    localStorage.setItem('fontSize', value);
+    toast.success(`Font size changed to ${value}`);
+  };
+  
+  const handleAnimationsChange = (checked: boolean) => {
+    setAnimations(checked);
+    localStorage.setItem('animations', checked.toString());
+    
+    const root = window.document.documentElement;
+    if (checked) {
+      root.classList.remove('reduce-animations');
+    } else {
+      root.classList.add('reduce-animations');
+    }
+    toast.success(`Animations ${checked ? 'enabled' : 'disabled'}`);
+  };
+  
+  const applyFontSize = (size: string) => {
+    const root = window.document.documentElement;
+    // Remove existing font size classes
+    root.classList.remove('text-sm', 'text-base', 'text-lg');
+    
+    // Add the new font size class
+    switch (size) {
+      case 'small':
+        root.classList.add('text-sm');
+        break;
+      case 'medium':
+        root.classList.add('text-base');
+        break;
+      case 'large':
+        root.classList.add('text-lg');
+        break;
+    }
   };
 
   return (
@@ -103,23 +154,19 @@ const AppearanceSettings = () => {
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="compact-mode" className="font-medium">Compact Mode</Label>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Reduce spacing for a more compact view</p>
-            </div>
-            <Switch id="compact-mode" />
-          </div>
-          
-          <div className="flex items-center justify-between">
-            <div>
               <Label htmlFor="animations" className="font-medium">Animations</Label>
               <p className="text-sm text-gray-500 dark:text-gray-400">Enable UI animations and transitions</p>
             </div>
-            <Switch id="animations" defaultChecked />
+            <Switch 
+              id="animations" 
+              checked={animations} 
+              onCheckedChange={handleAnimationsChange}
+            />
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="font-size">Font Size</Label>
-            <Select defaultValue="medium">
+            <Select value={fontSize} onValueChange={handleFontSizeChange}>
               <SelectTrigger id="font-size">
                 <SelectValue placeholder="Select font size" />
               </SelectTrigger>

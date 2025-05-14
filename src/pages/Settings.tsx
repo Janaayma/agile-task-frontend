@@ -9,7 +9,7 @@ import Sidebar from '@/components/Sidebar';
 import { TaskProvider } from '@/context/TaskContext';
 import { ErrorBoundary } from 'react-error-boundary';
 
-const ErrorFallback = ({ error, resetErrorBoundary }) => (
+const ErrorFallback = ({ error, resetErrorBoundary }: { error: Error, resetErrorBoundary: () => void }) => (
   <div className="flex flex-col items-center justify-center min-h-[50vh] p-6 text-center">
     <h2 className="text-xl font-bold text-red-600 mb-2">Something went wrong</h2>
     <p className="mb-4 text-gray-700">{error.message}</p>
@@ -36,11 +36,10 @@ const SettingsContent = () => {
           onValueChange={setActiveTab}
           className="w-full"
         >
-          <TabsList className="grid grid-cols-2 md:grid-cols-4 mb-8">
+          <TabsList className="grid grid-cols-3 mb-8">
             <TabsTrigger value="account">Account</TabsTrigger>
             <TabsTrigger value="appearance">Appearance</TabsTrigger>
             <TabsTrigger value="taskproject">Task & Project</TabsTrigger>
-            <TabsTrigger value="languageregion">Language & Region</TabsTrigger>
           </TabsList>
           
           <TabsContent value="account" className="space-y-4">
@@ -58,12 +57,6 @@ const SettingsContent = () => {
           <TabsContent value="taskproject" className="space-y-4">
             <ErrorBoundary FallbackComponent={ErrorFallback}>
               <TaskProjectSettings />
-            </ErrorBoundary>
-          </TabsContent>
-          
-          <TabsContent value="languageregion" className="space-y-4">
-            <ErrorBoundary FallbackComponent={ErrorFallback}>
-              <LanguageRegionSettings />
             </ErrorBoundary>
           </TabsContent>
         </Tabs>
