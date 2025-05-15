@@ -13,12 +13,14 @@ const BackendConnectionStatus = () => {
   useEffect(() => {
     const checkConnection = async () => {
       try {
-        // Simple query to check if we can connect
-        const { data, error } = await supabase.from('_dummy_query_').select('*').limit(1).maybeSingle();
+        // Simple ping - just fetch the server timestamp to check connection
+        const { data, error } = await supabase.rpc('get_service_role').maybeSingle();
         
-        // Even if we get an error about the table not existing, that's okay
-        // It means we can connect to Supabase
-        setIsConnected(true);
+        if (!error || error.code === 'PGRST116') {
+          // If we get a PGRST116 error (function not found), that's okay
+          // It means we can connect to Supabase, the function just doesn't exist
+          setIsConnected(true);
+        }
         
         // Check if auth is enabled by attempting to get the session
         const { data: sessionData } = await supabase.auth.getSession();
