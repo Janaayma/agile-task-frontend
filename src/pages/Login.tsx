@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Navigate, Link, useNavigate } from 'react-router-dom';
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,7 +13,6 @@ import { useToast } from '@/hooks/use-toast';
 import { CheckSquare } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/context/AuthContext';
 
 // Schema for login form
 const loginSchema = z.object({
@@ -39,14 +39,47 @@ const Login = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { signIn, signUp, user } = useAuth();
   
-  // If user is already authenticated, redirect to dashboard
+  // Clean up Supabase auth state
+  const cleanupAuthState = () => {
+    // Remove standard auth tokens
+    localStorage.removeItem('supabase.auth.token');
+    // Remove all Supabase auth keys from localStorage
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+        localStorage.removeItem(key);
+      }
+    });
+    // Remove from sessionStorage if in use
+    Object.keys(sessionStorage || {}).forEach((key) => {
+      if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+        sessionStorage.removeItem(key);
+      }
+    });
+  };
+
+  // Check for existing session
   useEffect(() => {
-    if (user) {
-      navigate('/dashboard');
-    }
-  }, [user, navigate]);
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        navigate('/dashboard');
+      }
+    };
+
+    checkSession();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        navigate('/dashboard');
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [navigate]);
   
   // Login form
   const loginForm = useForm<LoginFormValues>({
@@ -69,14 +102,27 @@ const Login = () => {
 
   const handleLogin = async (data: LoginFormValues) => {
     try {
+      // Clean up existing auth state
+      cleanupAuthState();
+      
+      // Attempt global sign out
+      try {
+        await supabase.auth.signOut({ scope: 'global' });
+      } catch (err) {
+        // Continue even if this fails
+      }
+      
       // Show loading toast
       toast({
         title: "Logging in...",
         description: "Please wait while we verify your credentials",
       });
       
-      // Use the AuthContext signIn method instead of direct Supabase calls
-      const { error } = await signIn(data.email, data.password);
+      // Attempt login
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      });
       
       if (error) {
         throw error;
@@ -87,7 +133,6 @@ const Login = () => {
         description: "Welcome back to TaskMaster",
       });
       
-      // Redirect to dashboard after successful login
       navigate('/dashboard');
     } catch (error: any) {
       toast({
@@ -101,14 +146,20 @@ const Login = () => {
 
   const handleSignup = async (data: SignupFormValues) => {
     try {
+      // Clean up existing auth state
+      cleanupAuthState();
+      
       // Show loading toast
       toast({
         title: "Creating account...",
         description: "Please wait while we set up your account",
       });
       
-      // Use the AuthContext signUp method instead of direct Supabase calls
-      const { error } = await signUp(data.email, data.password);
+      // Attempt signup
+      const { data: authData, error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+      });
       
       if (error) {
         throw error;
