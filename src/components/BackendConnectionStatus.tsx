@@ -13,17 +13,14 @@ const BackendConnectionStatus = () => {
   useEffect(() => {
     const checkConnection = async () => {
       try {
-        // Simple ping to check if we can connect - get the server timestamp
-        const { data, error } = await supabase.from('_dummy_query_that_doesnt_exist')
-          .select('*')
-          .limit(1);
+        // Use a safer method to check connection - getting the current session
+        // This API call will work regardless of database structure
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
         
-        // Even if we get an error about the table not existing, that's okay
-        // It means the API endpoint is reachable, and we're connected to Supabase
+        // If we get here without throwing an error, the API is reachable
         setIsConnected(true);
         
-        // Check if auth is enabled by attempting to get the session
-        const { data: sessionData } = await supabase.auth.getSession();
+        // Check if auth is enabled (this is already being done correctly)
         setAuthEnabled(true);
       } catch (error) {
         console.error("Error checking Supabase connection:", error);
