@@ -6,7 +6,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, lazy, useState, useEffect } from "react";
 import { ThemeProvider } from "./context/ThemeProvider";
-import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Index from "./pages/Index";
 import Settings from "./pages/Settings";
@@ -52,7 +51,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    // If user is not authenticated, handle silently
+    return <div className="flex items-center justify-center h-screen">Please authenticate with Supabase to access this application.</div>;
   }
 
   return <>{children}</>;
@@ -67,7 +67,6 @@ const App = () => (
         <BrowserRouter>
           <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
             <Routes>
-              <Route path="/login" element={<Login />} />
               <Route 
                 path="/dashboard" 
                 element={
@@ -84,7 +83,7 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
-              {/* Redirect root to dashboard for authenticated users or login for guests */}
+              {/* Redirect root to dashboard */}
               <Route 
                 path="/" 
                 element={<Navigate to="/dashboard" replace />} 
